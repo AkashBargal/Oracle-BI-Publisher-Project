@@ -1,12 +1,12 @@
-Project 1: Financial Reporting for AR/GL (Accounts Receivable and General Ledger)
+#Project 1: Financial Reporting for AR/GL (Accounts Receivable and General Ledger)
 Objective: Develop reports for financial data such as trial balance, income statements, and balance sheets using Oracle BI Publisher, based on data from Oracle Fusion Cloud’s AR and GL modules.
 
 SQL Queries for Data Extraction
 Trial Balance Report - SQL Query
 This query retrieves the trial balance data by pulling the debits and credits for each account and calculating the balance for each general ledger account.
 
-sql
-Copy code
+sql-------------------------------------------------------------------------------------------------------
+
 SELECT
     gl.account_number,
     gl.account_description,
@@ -25,16 +25,16 @@ GROUP BY
     gl.account_number, gl.account_description
 ORDER BY
     gl.account_number;
-Explanation:
 
+Explanation:
 This query calculates the total debits and total credits for each general ledger account.
 It then computes the balance for each account by subtracting total credits from total debits.
 It’s filtered for transactions that occurred in the fiscal year 2024.
 Income Statement - SQL Query
 This query fetches the revenues and expenses from the General Ledger for generating an income statement.
 
-sql
-Copy code
+sql-----------------------------------------------------------------------------------------------------
+
 SELECT
     CASE
         WHEN gl.account_type = 'REVENUE' THEN 'Revenue'
@@ -60,8 +60,70 @@ GROUP BY
     gl.account_number, gl.account_description
 ORDER BY
     category, gl.account_number;
-Explanation:
 
+Explanation:
 This query categorizes GL accounts into Revenue, Expenses, or Other based on the account type.
 It calculates the total amount for each category and account.
 Data is filtered for the year 2024.
+
+#Project 2: Supply Chain Management (SCM) Reporting
+Objective: Generate reports for order status, inventory levels, and procurement details using data from the Supply Chain Management (SCM) module.
+
+SQL Queries for Data Extraction
+Order Status Report - SQL Query
+This query extracts the status of orders, including the order creation date, fulfillment status, and the total order amount.
+
+sql------------------------------------------------------------------------------------------------------------------------
+
+SELECT
+    o.order_id,
+    o.order_date,
+    o.customer_id,
+    o.order_status,
+    SUM(oi.quantity * oi.unit_price) AS total_order_amount
+FROM
+    orders o
+JOIN
+    order_items oi
+    ON o.order_id = oi.order_id
+WHERE
+    o.order_date BETWEEN TO_DATE('2024-01-01', 'YYYY-MM-DD') AND TO_DATE('2024-12-31', 'YYYY-MM-DD')
+GROUP BY
+    o.order_id, o.order_date, o.customer_id, o.order_status
+ORDER BY
+    o.order_date;
+
+Explanation:
+This query pulls data on the order status, along with the total order value.
+It calculates the total order amount by multiplying the quantity and unit price for each order item.
+Filters for orders placed within the year 2024.
+Inventory Report - SQL Query
+This query fetches inventory levels by product and warehouse, showing the total quantity in stock for each item.
+
+sql---------------------------------------------------------------------------------------------------------------------------
+
+SELECT
+    p.product_id,
+    p.product_name,
+    w.warehouse_name,
+    SUM(s.quantity_on_hand) AS total_inventory
+FROM
+    inventory_stock s
+JOIN
+    products p
+    ON s.product_id = p.product_id
+JOIN
+    warehouses w
+    ON s.warehouse_id = w.warehouse_id
+WHERE
+    s.stock_date = (SELECT MAX(stock_date) FROM inventory_stock)
+GROUP BY
+    p.product_id, p.product_name, w.warehouse_name
+ORDER BY
+    p.product_name, w.warehouse_name;
+
+Explanation:
+This query retrieves the current inventory levels for each product across different warehouses.
+It ensures the latest stock is used by selecting the most recent stock date.
+It aggregates the total quantity on hand for each product per warehouse.
+
