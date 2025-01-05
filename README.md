@@ -19,5 +19,10 @@ Report Development: Customized, designed, and deployed complex BI Publisher repo
 Oracle Cloud Modules: Experienced in creating reports for SCM, OM, AR, Finance, and GL modules.
 Integration Work: Worked on inbound and outbound integrations to ensure seamless data transfer across systems using various API and data file formats (e.g., CSV, XML, JSON).
 
+Data Flow
+
 <img width="540" alt="image" src="https://github.com/user-attachments/assets/a8a93a25-1a93-41f4-a486-5fcdf66b9217" />
+
+<img width="395" alt="Bi Publisher Flow" src="https://github.com/user-attachments/assets/6a4ebe39-5d7a-4e73-b5c4-7ae53c712c59" />
+
 
