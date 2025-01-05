@@ -1,0 +1,67 @@
+Notable Project 1: Financial Reporting for AR/GL (Accounts Receivable and General Ledger)
+Objective: Develop reports for financial data such as trial balance, income statements, and balance sheets using Oracle BI Publisher, based on data from Oracle Fusion Cloud’s AR and GL modules.
+
+SQL Queries for Data Extraction
+Trial Balance Report - SQL Query
+This query retrieves the trial balance data by pulling the debits and credits for each account and calculating the balance for each general ledger account.
+
+sql
+Copy code
+SELECT
+    gl.account_number,
+    gl.account_description,
+    SUM(CASE WHEN trn.transaction_type = 'DEBIT' THEN trn.amount ELSE 0 END) AS total_debits,
+    SUM(CASE WHEN trn.transaction_type = 'CREDIT' THEN trn.amount ELSE 0 END) AS total_credits,
+    SUM(CASE WHEN trn.transaction_type = 'DEBIT' THEN trn.amount ELSE 0 END) -
+    SUM(CASE WHEN trn.transaction_type = 'CREDIT' THEN trn.amount ELSE 0 END) AS balance
+FROM
+    gl_accounts gl
+JOIN
+    gl_transactions trn
+    ON gl.account_id = trn.account_id
+WHERE
+    trn.transaction_date BETWEEN TO_DATE('2024-01-01', 'YYYY-MM-DD') AND TO_DATE('2024-12-31', 'YYYY-MM-DD')
+GROUP BY
+    gl.account_number, gl.account_description
+ORDER BY
+    gl.account_number;
+Explanation:
+
+This query calculates the total debits and total credits for each general ledger account.
+It then computes the balance for each account by subtracting total credits from total debits.
+It’s filtered for transactions that occurred in the fiscal year 2024.
+Income Statement - SQL Query
+This query fetches the revenues and expenses from the General Ledger for generating an income statement.
+
+sql
+Copy code
+SELECT
+    CASE
+        WHEN gl.account_type = 'REVENUE' THEN 'Revenue'
+        WHEN gl.account_type = 'EXPENSE' THEN 'Expenses'
+        ELSE 'Other'
+    END AS category,
+    gl.account_number,
+    gl.account_description,
+    SUM(trn.amount) AS total_amount
+FROM
+    gl_accounts gl
+JOIN
+    gl_transactions trn
+    ON gl.account_id = trn.account_id
+WHERE
+    trn.transaction_date BETWEEN TO_DATE('2024-01-01', 'YYYY-MM-DD') AND TO_DATE('2024-12-31', 'YYYY-MM-DD')
+GROUP BY
+    CASE
+        WHEN gl.account_type = 'REVENUE' THEN 'Revenue'
+        WHEN gl.account_type = 'EXPENSE' THEN 'Expenses'
+        ELSE 'Other'
+    END,
+    gl.account_number, gl.account_description
+ORDER BY
+    category, gl.account_number;
+Explanation:
+
+This query categorizes GL accounts into Revenue, Expenses, or Other based on the account type.
+It calculates the total amount for each category and account.
+Data is filtered for the year 2024.
