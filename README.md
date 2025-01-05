@@ -18,3 +18,6 @@ Data Extraction & Manipulation: Developed complex SQL queries to extract, clean,
 Report Development: Customized, designed, and deployed complex BI Publisher reports, including invoices, statements, and financial reports.
 Oracle Cloud Modules: Experienced in creating reports for SCM, OM, AR, Finance, and GL modules.
 Integration Work: Worked on inbound and outbound integrations to ensure seamless data transfer across systems using various API and data file formats (e.g., CSV, XML, JSON).
+
+<img width="540" alt="image" src="https://github.com/user-attachments/assets/a8a93a25-1a93-41f4-a486-5fcdf66b9217" />
+
